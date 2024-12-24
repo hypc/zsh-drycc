@@ -1,0 +1,180 @@
+#compdef drycc
+#autoload
+
+_drycc_commands() {
+  local -a commands
+  commands=(
+    # Auth commands, use 'drycc help auth' to learn more:
+    "register":"register a new user with a controller"
+    "login":"login to a controller"
+    "logout":"logout from the current controller"
+    # Subcommands, use 'drycc help [subcommand]' to learn more:
+    "apps":"manage applications used to provide services"
+    "apps\:create":"create a new application"
+    "apps\:list":"list accessible applications"
+    "apps\:info":"view info about an application"
+    "apps\:open":"open the application in a browser"
+    "apps\:logs":"view aggregated application logs"
+    "apps\:run":"run a command in an ephemeral app container"
+    "apps\:destroy":"destroy an application"
+    "apps\:transfer":"transfer app ownership to another user"
+    "autoscale":"manage autoscale for applications"
+    "autoscale\:list":"list autoscale options of an application"
+    "autoscale\:set":"turn on autoscale for an app"
+    "autoscale\:unset":"turn off autoscale for an app"
+    "builds":"manage builds created using 'git push'"
+    "builds\:list":"list build history for an application"
+    "builds\:create":"imports an image and deploys as a new release"
+    "canary":"manage canary deploy for applications"
+    "canary\:info":"list canary options of an application"
+    "canary\:create":"turn on canary for an app procfile type"
+    "canary\:remove":"turn off canary for an app procfile type"
+    "canary\:release":"release canary deploy for an app"
+    "certs":"manage SSL endpoints for an app"
+    "certs\:list":"list SSL certificates for an app"
+    "certs\:add":"add an SSL certificate to an app"
+    "certs\:remove":"remove an SSL certificate from an app"
+    "certs\:info":"get detailed informaton about the certificate"
+    "certs\:attach":"attach an SSL certificate to a domain"
+    "certs\:detach":"detach an SSL certificate from a domain"
+    "config":"manage environment variables that define app config"
+    "config\:list":"list environment variables for an app"
+    "config\:set":"set environment variables for an app"
+    "config\:unset":"unset environment variables for an app"
+    "config\:pull":"extract environment variables to .env"
+    "config\:push":"set environment variables from .env"
+    "domains":"manage and assign domain names to your applications"
+    "domains\:add":"bind a domain to an application"
+    "domains\:list":"list domains bound to an application"
+    "domains\:remove":"unbind a domain from an application"
+    "git":"manage git for applications"
+    "git\:remote":"Adds git remote of application to repository"
+    "git\:remove":"Removes git remote of application from repository"
+    "healthchecks":"manage healthchecks for applications"
+    "healthchecks\:list":"list healthchecks for an app"
+    "healthchecks\:set":"set healthchecks for an app"
+    "healthchecks\:unset":"unset healthchecks for an app"
+    "keys":"manage ssh keys used for 'git push' deployments"
+    "keys\:list":"list SSH keys for the logged in user"
+    "keys\:add":"add an SSH key"
+    "keys\:remove":"remove an SSH key"
+    "labels":"manage labels of application"
+    "labels\:list":"list application's labels"
+    "labels\:set":"add new application's label"
+    "labels\:unset":"remove application's label"
+    "limits":"manage resource limits for your application"
+    "limits\:list":"list resource limits for an app"
+    "limits\:set":"set resource limits for an app"
+    "limits\:unset":"unset resource limits for an app"
+    "perms":"manage permissions for applications"
+    "perms\:list":"list permissions granted on an app"
+    "perms\:create":"create a new permission for a user"
+    "perms\:delete":"delete a permission for a user"
+    "ps":"manage processes inside an app container"
+    "ps\:list":"list application processes"
+    "ps\:exec":"execute a command in a container"
+    "ps\:restart":"restart an application or process type"
+    "ps\:scale":"scale processes (e.g. web=4 worker=2)"
+    "registry":"manage private registry information for your application"
+    "registry\:list":"list registry info for an app"
+    "registry\:set":"set registry info for an app"
+    "registry\:unset":"unset registry info for an app"
+    "releases":"manage releases of an application"
+    "releases\:list":"list an application's release history"
+    "releases\:info":"print information about a specific release"
+    "releases\:rollback":"return to a previous release"
+    "routing":"manage routability of an application"
+    "routing\:info":"view routability of an application"
+    "routing\:enable":"enable routing for an app"
+    "routing\:disable":"disable routing for an app"
+    "tags":"manage tags for application containers"
+    "tags\:list":"list tags for an app"
+    "tags\:set":"set tags for an app"
+    "tags\:unset":"unset tags for an app"
+    "tls":"manage TLS settings for applications"
+    "tls\:info":"view info about an application's TLS settings"
+    "tls\:force\:enable":"enables the router to enforce https-only requests to an application"
+    "tls\:force\:disable":"disables the router to enforce https-only requests to an application"
+    "tls\:auto\:enable":"enables the router to automatic generation of certificates to an application"
+    "tls\:auto\:disable":"disables the router to automatic generation of certificates to an application"
+    "tls\:auto\:issuer":"add a issuer to an application"
+    "users":"manage users"
+    "users\:list":"list all registered users"
+    "users\:enable":"enable a user"
+    "users\:disable":"disable a user"
+    "version":"display client version"
+    "services":"manage services for your applications"
+    "services\:add":"create service for an application"
+    "services\:list":"list application services"
+    "services\:remove":"remove service from an application"
+    "routes":"manage routes for your applications"
+    "routes\:create":"create a route for an application"
+    "routes\:list":"list application routes"
+    "routes\:get":"get rule of route"
+    "routes\:set":"set rule of route"
+    "routes\:attach":"attach to gateway"
+    "routes\:detach":"detach to gateway"
+    "routes\:remove":"remove routes from an application"
+    "gateways":"manage gateways for your applications"
+    "gateways\:add":"create gateways for an application"
+    "gateways\:list":"list application gateways"
+    "gateways\:remove":"remove gateways from an application"
+    "timeouts":"manage pods termination grace period"
+    "timeouts\:list":"list resource timeouts for an app"
+    "timeouts\:set":"set resource timeouts for an app"
+    "timeouts\:unset":"unset resource timeouts for an app"
+    "volumes":"manage volumes for your applications"
+    "volumes\:create":"create a volume for the application"
+    "volumes\:expand":"expand a volume for the application"
+    "volumes\:list":"list volumes in the application"
+    "volumes\:info":"print information about a volume"
+    "volumes\:delete":"delete a volume from the application"
+    "volumes\:mount":"mount a volume to process of the application"
+    "volumes\:unmount":"unmount a volume from process of the application"
+    "resources":"manage resources for your applications"
+    "resources\:services":"list all available resource services"
+    "resources\:plans":"list all available plans for an resource services"
+    "resources\:create":"create a resource for the application"
+    "resources\:list":"list resources in the application"
+    "resources\:describe":"get a resource detail info in the application"
+    "resources\:update":"update a resource from the application"
+    "resources\:destroy":"delete a resource from the applicationa"
+    "resources\:bind":"bind a resource to servicebroker"
+    "resources\:unbind":"unbind a resource from servicebroker"
+    # Shortcut commands, use 'drycc shortcuts' to see all:
+    "create":"create a new application"
+    "destroy":"destroy an application"
+    "info":"view information about the current app"
+    "logs":"view aggregated log info for the app"
+    "open":"open a URL to the app in a browser"
+    "pull":"imports an image and deploys as a new release"
+    "run":"run a command in an ephemeral app container"
+    "scale":"scale processes by type (web=2, worker=1)"
+    # External commands:
+    "use":"Modify the current controller"
+  )
+  _describe -t commands 'drycc command' commands && ret=0
+}
+
+_controllers(){
+  local -a controllers
+  controllers=(
+    $(cat ~/.drycc/*.client.json | jq -r '.controller | split("://") | .[1]')
+  )
+  _describe -t controllers 'drycc controllers' controllers && ret=0
+}
+
+_drycc() {
+  _arguments -C \
+    '1: :->cmds' \
+    '2: :->args' && ret=0
+  case $state in
+    cmds) _drycc_commands ;;
+    args)
+      case $words[2] in
+        use) _controllers ;;
+      esac ;;
+  esac
+}
+
+_drycc "$@"
