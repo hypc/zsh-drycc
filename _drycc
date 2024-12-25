@@ -164,15 +164,75 @@ _controllers(){
   _describe -t controllers 'drycc controllers' controllers && ret=0
 }
 
+_applications() {
+  local -a applications
+  applications=(
+    $(drycc apps:list --limit 10000 | awk '{print $1}' | grep -v ID)
+  )
+  _describe -t applications 'drycc applications' applications && ret=0
+}
+
+_users() {
+  local -a users
+  users=(
+    $(drycc users:list | awk '{print $1}' | grep -v USERNAME)
+  )
+  _describe -t users 'drycc users' users && ret=0
+}
+
+_options() {
+  local -a app_opts
+  local -a limit_opts
+  local -a lines_opts
+  local -a follow_opts
+  local -a timeout_opts
+  local -a admin_opts
+  app_opts=(
+    "-a[the uniquely identifiable name for the application.]:string:_applications"
+    "--app[the uniquely identifiable name for the application.]:string:_applications"
+  )
+  limit_opts=(
+    "-l[the maximum number of results to display, defaults to config setting]:number"
+    "--limit[the maximum number of results to display, defaults to config setting]:number"
+  )
+  lines_opts=(
+    "-n[the number of lines to display]:number"
+    "--lines[the number of lines to display]:number"
+  )
+  follow_opts=(
+    "-f[specify if the logs should be streamed.]:boolean"
+    "--follow[specify if the logs should be streamed.]:boolean"
+  )
+  timeout_opts=(
+    "-t[the max seconds of follow the log stream.]:number"
+    "--timeout[the max seconds of follow the log stream.]:number"
+  )
+  admin_opts=(
+    "--admin[lists all users with system administrator privileges.]:boolean"
+  )
+  case $words[1] in
+    apps|apps:list) _arguments -s -A '*' ${limit_opts[@]} && ret=0 ;;
+    ps|ps:list) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    releases|releases:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
+    logs) _arguments -s -A '*' ${app_opts[@]} ${lines_opts[@]} ${follow_opts[@]} ${timeout_opts[@]} && ret=0 ;;
+    scale) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    users|users:list) _arguments -s -A '*' ${limit_opts[@]} && ret=0 ;;
+    perms|perms:list) _arguments -s -A '*' ${app_opts[@]} ${admin_opts[@]} ${limit_opts[@]} && ret=0 ;;
+    perms:create|perms:delete) _arguments -s -A '*' ${app_opts[@]} ${admin_opts[@]} && ret=0 ;;
+    run) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+  esac
+}
+
 _drycc() {
   _arguments -C \
-    '1: :->cmds' \
-    '2: :->args' && ret=0
+    '1: :->subcmds' \
+    '*::arg:->args' && ret=0
   case $state in
-    cmds) _drycc_commands ;;
+    subcmds) _drycc_commands ;;
     args)
-      case $words[2] in
+      case $words[1] in
         use) _controllers ;;
+        *) _options ;;
       esac ;;
   esac
 }
