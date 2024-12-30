@@ -181,45 +181,81 @@ _users() {
 }
 
 _options() {
-  local -a app_opts
-  local -a limit_opts
-  local -a lines_opts
-  local -a follow_opts
-  local -a timeout_opts
   local -a admin_opts
+  admin_opts=(
+    "--admin[lists all users with system administrator privileges.]:boolean"
+  )
+  local -a app_opts
   app_opts=(
     "-a[the uniquely identifiable name for the application.]:string:_applications"
     "--app[the uniquely identifiable name for the application.]:string:_applications"
   )
-  limit_opts=(
-    "-l[the maximum number of results to display, defaults to config setting]:number"
-    "--limit[the maximum number of results to display, defaults to config setting]:number"
+  local -a diff_opts
+  diff_opts=(
+    "--diff[print output on multiple lines for comparison against .env files.]:boolean"
   )
-  lines_opts=(
-    "-n[the number of lines to display]:number"
-    "--lines[the number of lines to display]:number"
-  )
+  local -a follow_opts
   follow_opts=(
     "-f[specify if the logs should be streamed.]:boolean"
     "--follow[specify if the logs should be streamed.]:boolean"
   )
+  local -a force_opts
+  force_opts=(
+    "-f[overwrite remote of the given name if it already exists.]:boolean"
+    "--force[overwrite remote of the given name if it already exists.]:boolean"
+  )
+  local -a health_type_opts
+  health_type_opts=(
+    "--type[the procType for which the health check needs to be applied.]:string"
+  )
+  local -a limit_opts
+  limit_opts=(
+    "-l[the maximum number of results to display, defaults to config setting]:number"
+    "--limit[the maximum number of results to display, defaults to config setting]:number"
+  )
+  local -a lines_opts
+  lines_opts=(
+    "-n[the number of lines to display]:number"
+    "--lines[the number of lines to display]:number"
+  )
+  local -a online_opts
+  online_opts=(
+    "--online[print output on one line.]:boolean"
+  )
+  local -a remote_opts
+  remote_opts=(
+    "-r[name of remote to create. [default: drycc]]:string"
+    "--remote[name of remote to create. [default: drycc]]:string"
+  )
+  local -a timeout_opts
   timeout_opts=(
     "-t[the max seconds of follow the log stream.]:number"
     "--timeout[the max seconds of follow the log stream.]:number"
   )
-  admin_opts=(
-    "--admin[lists all users with system administrator privileges.]:boolean"
-  )
+
   case $words[1] in
     apps|apps:list) _arguments -s -A '*' ${limit_opts[@]} && ret=0 ;;
+    autoscale|autoscale:list) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    config|config:list) _arguments -s -A '*' ${online_opts[@]} ${diff_opts[@]} ${app_opts[@]} && ret=0 ;;
+    domains|domains:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
+    gateways|gateways:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
+    git:remote) _arguments -s -A '*' ${app_opts[@]} ${remote_opts[@]} ${force_opts[@]} && ret=0 ;;
+    git:remove) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    healthchecks|healthchecks:list) _arguments -s -A '*' ${app_opts[@]} ${health_type_opts[@]} && ret=0 ;;
+    labels|labels:list) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    logs) _arguments -s -A '*' ${app_opts[@]} ${lines_opts[@]} ${follow_opts[@]} ${timeout_opts[@]} && ret=0 ;;
+    perms:create|perms:delete) _arguments -s -A '*' ${app_opts[@]} ${admin_opts[@]} && ret=0 ;;
+    perms|perms:list) _arguments -s -A '*' ${app_opts[@]} ${admin_opts[@]} ${limit_opts[@]} && ret=0 ;;
     ps|ps:list) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
     releases|releases:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
-    logs) _arguments -s -A '*' ${app_opts[@]} ${lines_opts[@]} ${follow_opts[@]} ${timeout_opts[@]} && ret=0 ;;
-    scale) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
-    users|users:list) _arguments -s -A '*' ${limit_opts[@]} && ret=0 ;;
-    perms|perms:list) _arguments -s -A '*' ${app_opts[@]} ${admin_opts[@]} ${limit_opts[@]} && ret=0 ;;
-    perms:create|perms:delete) _arguments -s -A '*' ${app_opts[@]} ${admin_opts[@]} && ret=0 ;;
+    resources|resources:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
+    routes|routes:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
     run) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    scale) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    services|services:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
+    tags|tags:list) _arguments -s -A '*' ${app_opts[@]} && ret=0 ;;
+    users|users:list) _arguments -s -A '*' ${limit_opts[@]} && ret=0 ;;
+    volumes|volumes:list) _arguments -s -A '*' ${app_opts[@]} ${limit_opts[@]} && ret=0 ;;
   esac
 }
 
